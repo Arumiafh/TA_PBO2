@@ -4,12 +4,24 @@
  * and open the template in the editor.
  */
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+
+
 /**
  *
  * @author arumia
  */
 public class Input_Barang extends javax.swing.JFrame {
 
+    public Connection con;
+    public Statement stat;
+    public String sql="";
+    public ResultSet rs;
+    
     /**
      * Creates new form Input_Barang
      */
@@ -35,7 +47,7 @@ public class Input_Barang extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         buttonExit = new javax.swing.JButton();
         buttonSave = new javax.swing.JButton();
-        buttonCancel = new javax.swing.JButton();
+        buttonRefresh = new javax.swing.JButton();
         jtextStokBarang = new javax.swing.JTextField();
         jtextKodeBarang = new javax.swing.JTextField();
         jtextNamaBarang = new javax.swing.JTextField();
@@ -87,20 +99,25 @@ public class Input_Barang extends javax.swing.JFrame {
             }
         });
         jPanel3.add(buttonExit);
-        buttonExit.setBounds(210, 260, 70, 30);
+        buttonExit.setBounds(220, 260, 70, 30);
 
         buttonSave.setText("Save");
+        buttonSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonSaveActionPerformed(evt);
+            }
+        });
         jPanel3.add(buttonSave);
         buttonSave.setBounds(50, 260, 70, 30);
 
-        buttonCancel.setText("Cancel");
-        buttonCancel.addActionListener(new java.awt.event.ActionListener() {
+        buttonRefresh.setText("Refresh");
+        buttonRefresh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonCancelActionPerformed(evt);
+                buttonRefreshActionPerformed(evt);
             }
         });
-        jPanel3.add(buttonCancel);
-        buttonCancel.setBounds(130, 260, 70, 30);
+        jPanel3.add(buttonRefresh);
+        buttonRefresh.setBounds(130, 260, 80, 30);
         jPanel3.add(jtextStokBarang);
         jtextStokBarang.setBounds(130, 200, 170, 30);
         jPanel3.add(jtextKodeBarang);
@@ -111,18 +128,50 @@ public class Input_Barang extends javax.swing.JFrame {
         jtextHargaBarang.setBounds(130, 160, 170, 30);
 
         getContentPane().add(jPanel3);
-        jPanel3.setBounds(0, 0, 340, 320);
+        jPanel3.setBounds(0, 0, 350, 320);
 
         setBounds(0, 0, 358, 358);
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
-        // TODO add your handling code here:
+        dispose();
     }//GEN-LAST:event_buttonExitActionPerformed
 
-    private void buttonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCancelActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonCancelActionPerformed
+    private void buttonRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRefreshActionPerformed
+        jtextKodeBarang.setText(" ");
+        jtextNamaBarang.setText(" ");
+        jtextHargaBarang.setText(" ");
+        jtextStokBarang.setText(" ");
+    }//GEN-LAST:event_buttonRefreshActionPerformed
+
+    private void buttonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSaveActionPerformed
+        
+        String kodebarang = jtextKodeBarang.getText();
+        String namabarang = jtextNamaBarang.getText();
+        String hargabarang = jtextHargaBarang.getText();
+        String stokbarang = jtextStokBarang.getText();
+        
+        try
+        {
+            String dbname="jdbc:ucanaccess://E:/TA PBO/AplikasiSederhana(DB_MsAccess)/db_barang.accdb";
+            Connection con = DriverManager.getConnection(dbname);
+            Statement statement = con.createStatement();
+            String sql="insert into tb_databarang values('"+kodebarang+"','" +
+                    namabarang+"','"+
+                    hargabarang+"','"+
+                    stokbarang+"')";
+            
+            statement.executeUpdate(sql);
+            statement.close();
+            
+            JOptionPane.showMessageDialog(null,"Data berhasil ditambahkan","Insert Data",JOptionPane.INFORMATION_MESSAGE);
+            con.close();
+        }
+        catch(Exception e)
+        {
+            JOptionPane.showMessageDialog(null,"error: "+e,"Data gagal ditambahkan",JOptionPane.WARNING_MESSAGE);
+        }    
+    }//GEN-LAST:event_buttonSaveActionPerformed
 
     /**
      * @param args the command line arguments
@@ -160,8 +209,8 @@ public class Input_Barang extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton buttonCancel;
     private javax.swing.JButton buttonExit;
+    private javax.swing.JButton buttonRefresh;
     private javax.swing.JButton buttonSave;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
